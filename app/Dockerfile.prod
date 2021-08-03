@@ -10,13 +10,16 @@ ENV PYTHONUNBUFFERED 1
 
 # install psycopg2
 RUN apk update \
-    && apk add --virtual build-deps gcc python3-dev musl-dev \
+    && apk add --virtual build-deps gcc python3-dev virtualenv musl-dev \
     && apk add postgresql-dev \
     && pip install psycopg2 \
     && apk del build-deps
 
 # install dependencies
 RUN pip install --upgrade pip
+RUN cd /usr/src/app
+RUN virtualenv -p python3 venv
+RUN source venv/bin/activate
 COPY ./requirements.txt /usr/src/app/requirements.txt
 RUN pip install -r /usr/src/app/requirements.txt
 
